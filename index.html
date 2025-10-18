@@ -1,0 +1,1087 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Assistant Maintenance Maison</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #2E7D32;
+            --primary-light: #60AD5E;
+            --primary-dark: #005005;
+            --secondary: #FF9800;
+            --text: #333333;
+            --text-light: #757575;
+            --background: #F5F5F5;
+            --card: #FFFFFF;
+            --shadow: 0 2px 10px rgba(0,0,0,0.1);
+            --danger: #f44336;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: var(--background);
+            color: var(--text);
+            line-height: 1.6;
+            padding-bottom: 80px;
+        }
+        
+        .container {
+            max-width: 100%;
+            padding: 16px;
+        }
+        
+        header {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            padding: 20px 16px;
+            box-shadow: var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        h1 {
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+        
+        .app-icon {
+            width: 40px;
+            height: 40px;
+            background-color: white;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary);
+            font-weight: bold;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        
+        .card {
+            background-color: var(--card);
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: var(--shadow);
+            transition: transform 0.3s ease;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .card-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 16px;
+            color: var(--primary-dark);
+            display: flex;
+            align-items: center;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 10px;
+        }
+        
+        .card-title i {
+            margin-right: 10px;
+            color: var(--primary);
+        }
+        
+        .maintenance-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 14px 0;
+            border-bottom: 1px solid #eee;
+            transition: background-color 0.2s;
+        }
+        
+        .maintenance-item:hover {
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            padding-left: 10px;
+            padding-right: 10px;
+        }
+        
+        .maintenance-item:last-child {
+            border-bottom: none;
+        }
+        
+        .item-info {
+            flex: 1;
+        }
+        
+        .item-info h3 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+        
+        .item-info p {
+            font-size: 0.9rem;
+            color: var(--text-light);
+        }
+        
+        .item-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .status {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            min-width: 70px;
+            text-align: center;
+        }
+        
+        .status.urgent {
+            background-color: #FFEBEE;
+            color: #C62828;
+        }
+        
+        .status.due {
+            background-color: #FFF3E0;
+            color: #EF6C00;
+        }
+        
+        .status.ok {
+            background-color: #E8F5E9;
+            color: var(--primary);
+        }
+        
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 12px 20px;
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.3s;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .btn:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+        }
+        
+        .btn i {
+            margin-right: 8px;
+        }
+        
+        .btn-secondary {
+            background-color: var(--secondary);
+        }
+        
+        .btn-secondary:hover {
+            background-color: #EF6C00;
+        }
+        
+        .btn-whatsapp {
+            background-color: #25D366;
+        }
+        
+        .btn-whatsapp:hover {
+            background-color: #128C7E;
+        }
+        
+        .btn-danger {
+            background-color: var(--danger);
+        }
+        
+        .btn-danger:hover {
+            background-color: #d32f2f;
+        }
+        
+        .btn-small {
+            padding: 8px 12px;
+            font-size: 0.85rem;
+        }
+        
+        .btn-full {
+            width: 100%;
+        }
+        
+        .tabs {
+            display: flex;
+            margin-bottom: 20px;
+            background-color: white;
+            border-radius: 12px;
+            padding: 5px;
+            box-shadow: var(--shadow);
+        }
+        
+        .tab {
+            flex: 1;
+            padding: 14px 10px;
+            cursor: pointer;
+            font-weight: 600;
+            color: var(--text-light);
+            text-align: center;
+            border-radius: 10px;
+            transition: all 0.3s;
+        }
+        
+        .tab.active {
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            color: white;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.5s;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .history-item {
+            padding: 14px 0;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .history-item:last-child {
+            border-bottom: none;
+        }
+        
+        .history-date {
+            font-weight: 600;
+            margin-bottom: 4px;
+            color: var(--primary);
+        }
+        
+        .history-desc {
+            font-size: 0.95rem;
+            color: var(--text-light);
+        }
+        
+        .history-actions {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .history-actions button {
+            padding: 6px 10px;
+            font-size: 0.8rem;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--primary-dark);
+        }
+        
+        input, select, textarea {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: border 0.3s;
+        }
+        
+        input:focus, select:focus, textarea:focus {
+            border-color: var(--primary);
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(46, 125, 50, 0.2);
+        }
+        
+        textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+        
+        .form-row {
+            display: flex;
+            gap: 15px;
+        }
+        
+        .form-row .form-group {
+            flex: 1;
+        }
+        
+        .notification {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: var(--primary);
+            color: white;
+            padding: 14px 24px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            z-index: 1000;
+            display: none;
+            animation: slideUp 0.3s;
+        }
+        
+        @keyframes slideUp {
+            from { bottom: -50px; opacity: 0; }
+            to { bottom: 20px; opacity: 1; }
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+            animation: fadeIn 0.3s;
+        }
+        
+        .modal-content {
+            background-color: white;
+            border-radius: 16px;
+            width: 90%;
+            max-width: 500px;
+            padding: 0;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            animation: slideUp 0.3s;
+        }
+        
+        .modal-header {
+            padding: 20px;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .modal-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--primary-dark);
+        }
+        
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--text-light);
+        }
+        
+        .modal-body {
+            padding: 20px;
+            max-height: 70vh;
+            overflow-y: auto;
+        }
+        
+        .modal-footer {
+            padding: 20px;
+            border-top: 1px solid #eee;
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--text-light);
+        }
+        
+        .empty-state i {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            color: #ddd;
+        }
+        
+        .empty-state p {
+            margin-top: 10px;
+        }
+        
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .stat-card {
+            background: white;
+            border-radius: 12px;
+            padding: 15px;
+            text-align: center;
+            box-shadow: var(--shadow);
+        }
+        
+        .stat-value {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 5px;
+        }
+        
+        .stat-label {
+            font-size: 0.85rem;
+            color: var(--text-light);
+        }
+        
+        @media (min-width: 768px) {
+            .container {
+                max-width: 600px;
+                margin: 0 auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <div class="app-icon">
+                <i class="fas fa-tools"></i>
+            </div>
+            <h1>Assistant Maintenance</h1>
+            <div style="width: 40px;"></div>
+        </div>
+    </header>
+    
+    <div class="container">
+        <div class="stats">
+            <div class="stat-card">
+                <div class="stat-value" id="urgentCount">2</div>
+                <div class="stat-label">Urgents</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="dueCount">1</div>
+                <div class="stat-label">Bientôt</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="totalCount">5</div>
+                <div class="stat-label">Total</div>
+            </div>
+        </div>
+        
+        <div class="tabs">
+            <div class="tab active" data-tab="dashboard">
+                <i class="fas fa-tachometer-alt"></i> Tableau de bord
+            </div>
+            <div class="tab" data-tab="history">
+                <i class="fas fa-history"></i> Historique
+            </div>
+            <div class="tab" data-tab="alerts">
+                <i class="fas fa-bell"></i> Alertes
+            </div>
+        </div>
+        
+        <!-- Tableau de bord -->
+        <div id="dashboard" class="tab-content active">
+            <div class="card">
+                <h2 class="card-title"><i class="fas fa-list"></i> Entretiens à venir</h2>
+                
+                <div id="maintenance-list">
+                    <!-- Les éléments d'entretien seront ajoutés ici dynamiquement -->
+                </div>
+                
+                <div class="empty-state" id="empty-maintenance" style="display: none;">
+                    <i class="fas fa-clipboard-list"></i>
+                    <h3>Aucun entretien programmé</h3>
+                    <p>Ajoutez votre premier entretien à suivre</p>
+                </div>
+            </div>
+            
+            <div class="card">
+                <h2 class="card-title"><i class="fas fa-bolt"></i> Actions rapides</h2>
+                <button class="btn btn-full" id="addMaintenance">
+                    <i class="fas fa-plus"></i> Ajouter un entretien
+                </button>
+                <button class="btn btn-whatsapp btn-full" style="margin-top: 10px;" id="shareWhatsApp">
+                    <i class="fab fa-whatsapp"></i> Partager via WhatsApp
+                </button>
+            </div>
+        </div>
+        
+        <!-- Historique -->
+        <div id="history" class="tab-content">
+            <div class="card">
+                <h2 class="card-title"><i class="fas fa-history"></i> Historique des interventions</h2>
+                
+                <div id="history-list">
+                    <!-- Les éléments d'historique seront ajoutés ici dynamiquement -->
+                </div>
+                
+                <div class="empty-state" id="empty-history" style="display: none;">
+                    <i class="fas fa-history"></i>
+                    <h3>Aucun historique</h3>
+                    <p>Les entretiens effectués apparaîtront ici</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Alertes -->
+        <div id="alerts" class="tab-content">
+            <div class="card">
+                <h2 class="card-title"><i class="fas fa-bell"></i> Configurer les alertes</h2>
+                
+                <div class="form-group">
+                    <label for="maintenanceType">Type d'entretien</label>
+                    <select id="maintenanceType">
+                        <option value="chaudiere">Chaudière</option>
+                        <option value="filtres">Filtres à eau</option>
+                        <option value="fumee">Détecteurs de fumée</option>
+                        <option value="vmc">VMC</option>
+                        <option value="climatisation">Climatisation</option>
+                        <option value="ballon">Ballon d'eau chaude</option>
+                        <option value="forage">Ballon de forage</option>
+                        <option value="ramonage">Ramonage</option>
+                        <option value="controle_technique">Contrôle technique</option>
+                        <option value="revision_vehicule">Révision véhicule</option>
+                        <option value="autre">Autre</option>
+                    </select>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="frequency">Fréquence (mois)</label>
+                        <input type="number" id="frequency" min="1" max="24" value="6">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="reminder">Rappel (jours avant)</label>
+                        <input type="number" id="reminder" min="1" max="30" value="7">
+                    </div>
+                </div>
+                
+                <button class="btn btn-full" id="saveAlert">
+                    <i class="fas fa-save"></i> Enregistrer l'alerte
+                </button>
+            </div>
+            
+            <div class="card">
+                <h2 class="card-title"><i class="fas fa-cogs"></i> Alertes programmées</h2>
+                
+                <div id="alerts-list">
+                    <!-- Les alertes seront ajoutées ici dynamiquement -->
+                </div>
+                
+                <div class="empty-state" id="empty-alerts" style="display: none;">
+                    <i class="fas fa-bell-slash"></i>
+                    <h3>Aucune alerte programmée</h3>
+                    <p>Créez votre première alerte</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal pour ajouter un entretien -->
+    <div class="modal" id="addMaintenanceModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Ajouter un entretien</h3>
+                <button class="close-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="maintenanceName">Nom de l'entretien</label>
+                    <input type="text" id="maintenanceName" placeholder="Ex: Révision chaudière">
+                </div>
+                
+                <div class="form-group">
+                    <label for="maintenanceDescription">Description</label>
+                    <textarea id="maintenanceDescription" placeholder="Détails sur l'entretien à effectuer..."></textarea>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="lastDate">Dernière intervention</label>
+                        <input type="date" id="lastDate">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="nextDate">Prochaine intervention</label>
+                        <input type="date" id="nextDate">
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="maintenanceCategory">Catégorie</label>
+                    <select id="maintenanceCategory">
+                        <option value="chaudiere">Chaudière</option>
+                        <option value="filtres">Filtres à eau</option>
+                        <option value="fumee">Détecteurs de fumée</option>
+                        <option value="vmc">VMC</option>
+                        <option value="climatisation">Climatisation</option>
+                        <option value="ballon">Ballon d'eau chaude</option>
+                        <option value="forage">Ballon de forage</option>
+                        <option value="ramonage">Ramonage</option>
+                        <option value="controle_technique">Contrôle technique</option>
+                        <option value="revision_vehicule">Révision véhicule</option>
+                        <option value="autre">Autre</option>
+                    </select>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="cancelMaintenance">Annuler</button>
+                <button class="btn" id="saveMaintenance">Enregistrer</button>
+            </div>
+        </div>
+    </div>
+    
+    <div class="notification" id="notification">
+        <!-- Le message de notification sera inséré ici -->
+    </div>
+
+    <script>
+        // Données de l'application
+        let maintenanceItems = [
+            {
+                id: 1,
+                name: "Chaudière",
+                description: "Entretien annuel de la chaudière gaz",
+                lastDate: "2023-10-15",
+                nextDate: "2024-04-15",
+                category: "chaudiere",
+                status: "urgent"
+            },
+            {
+                id: 2,
+                name: "Filtres à eau",
+                description: "Changement des filtres du système de filtration",
+                lastDate: "2024-01-20",
+                nextDate: "2024-04-20",
+                category: "filtres",
+                status: "due"
+            },
+            {
+                id: 3,
+                name: "Détecteurs de fumée",
+                description: "Test mensuel des détecteurs",
+                lastDate: "2024-02-05",
+                nextDate: "2024-03-05",
+                category: "fumee",
+                status: "ok"
+            },
+            {
+                id: 4,
+                name: "Ramonage cheminée",
+                description: "Ramonage annuel obligatoire",
+                lastDate: "2023-09-10",
+                nextDate: "2024-09-10",
+                category: "ramonage",
+                status: "ok"
+            },
+            {
+                id: 5,
+                name: "Contrôle technique voiture",
+                description: "Contrôle technique de la Peugeot 308",
+                lastDate: "2023-11-20",
+                nextDate: "2025-11-20",
+                category: "controle_technique",
+                status: "ok"
+            }
+        ];
+        
+        let historyItems = [
+            {
+                id: 1,
+                date: "2023-10-15",
+                description: "Entretien chaudière par TechniGaz",
+                category: "chaudiere"
+            },
+            {
+                id: 2,
+                date: "2024-01-20",
+                description: "Changement des filtres à eau",
+                category: "filtres"
+            },
+            {
+                id: 3,
+                date: "2024-02-05",
+                description: "Test des détecteurs de fumée",
+                category: "fumee"
+            },
+            {
+                id: 4,
+                date: "2023-09-10",
+                description: "Ramonage cheminée par Entreprise Fumée",
+                category: "ramonage"
+            },
+            {
+                id: 5,
+                date: "2023-11-20",
+                description: "Contrôle technique voiture - Centre Auto Plus",
+                category: "controle_technique"
+            }
+        ];
+        
+        let alertItems = [
+            {
+                id: 1,
+                type: "chaudiere",
+                frequency: 12,
+                reminder: 14
+            },
+            {
+                id: 2,
+                type: "filtres",
+                frequency: 6,
+                reminder: 7
+            },
+            {
+                id: 3,
+                type: "ramonage",
+                frequency: 12,
+                reminder: 30
+            }
+        ];
+
+        // Initialisation de l'application
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialiser les données
+            updateMaintenanceList();
+            updateHistoryList();
+            updateAlertsList();
+            updateStats();
+            
+            // Gestion des onglets
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.addEventListener('click', () => {
+                    // Désactiver tous les onglets
+                    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                    
+                    // Activer l'onglet cliqué
+                    tab.classList.add('active');
+                    document.getElementById(tab.dataset.tab).classList.add('active');
+                });
+            });
+            
+            // Ouvrir le modal d'ajout d'entretien
+            document.getElementById('addMaintenance').addEventListener('click', () => {
+                document.getElementById('addMaintenanceModal').style.display = 'flex';
+                // Définir la date du jour comme valeur par défaut
+                const today = new Date().toISOString().split('T')[0];
+                document.getElementById('lastDate').value = today;
+                
+                // Calculer la date dans 6 mois pour la prochaine intervention
+                const nextDate = new Date();
+                nextDate.setMonth(nextDate.getMonth() + 6);
+                document.getElementById('nextDate').value = nextDate.toISOString().split('T')[0];
+            });
+            
+            // Fermer les modals
+            document.querySelectorAll('.close-modal, .btn-secondary').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    if (e.target.id === 'cancelMaintenance' || e.target.classList.contains('close-modal')) {
+                        document.querySelectorAll('.modal').forEach(modal => {
+                            modal.style.display = 'none';
+                        });
+                    }
+                });
+            });
+            
+            // Sauvegarder un nouvel entretien
+            document.getElementById('saveMaintenance').addEventListener('click', () => {
+                const name = document.getElementById('maintenanceName').value;
+                const description = document.getElementById('maintenanceDescription').value;
+                const lastDate = document.getElementById('lastDate').value;
+                const nextDate = document.getElementById('nextDate').value;
+                const category = document.getElementById('maintenanceCategory').value;
+                
+                if (!name || !lastDate || !nextDate) {
+                    showNotification('Veuillez remplir tous les champs obligatoires', 'error');
+                    return;
+                }
+                
+                // Calculer le statut en fonction de la date
+                const today = new Date();
+                const nextDateObj = new Date(nextDate);
+                const diffTime = nextDateObj - today;
+                const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+                
+                let status = 'ok';
+                if (diffDays <= 7) {
+                    status = 'urgent';
+                } else if (diffDays <= 30) {
+                    status = 'due';
+                }
+                
+                // Ajouter le nouvel entretien
+                const newItem = {
+                    id: maintenanceItems.length > 0 ? Math.max(...maintenanceItems.map(item => item.id)) + 1 : 1,
+                    name,
+                    description,
+                    lastDate,
+                    nextDate,
+                    category,
+                    status
+                };
+                
+                maintenanceItems.push(newItem);
+                
+                // Mettre à jour l'affichage
+                updateMaintenanceList();
+                updateStats();
+                
+                // Fermer le modal et réinitialiser le formulaire
+                document.getElementById('addMaintenanceModal').style.display = 'none';
+                document.getElementById('maintenanceName').value = '';
+                document.getElementById('maintenanceDescription').value = '';
+                
+                showNotification('Entretien ajouté avec succès');
+            });
+            
+            // Partager via WhatsApp (ouvre directement WhatsApp)
+            document.getElementById('shareWhatsApp').addEventListener('click', () => {
+                // Générer le message
+                let message = "🔧 *Mon planning d'entretien maison* 🔧\n\n";
+                
+                maintenanceItems.forEach(item => {
+                    const nextDate = new Date(item.nextDate).toLocaleDateString('fr-FR');
+                    message += `• ${item.name}: ${nextDate} (${getStatusText(item.status)})\n`;
+                });
+                
+                message += "\nPartagé via l'application Assistant Maintenance";
+                
+                // Ouvrir WhatsApp directement
+                const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(message)}`;
+                window.open(whatsappUrl, '_blank');
+                
+                showNotification('WhatsApp ouvert pour le partage');
+            });
+            
+            // Sauvegarder une alerte
+            document.getElementById('saveAlert').addEventListener('click', () => {
+                const type = document.getElementById('maintenanceType').value;
+                const frequency = document.getElementById('frequency').value;
+                const reminder = document.getElementById('reminder').value;
+                
+                // Vérifier si une alerte pour ce type existe déjà
+                const existingIndex = alertItems.findIndex(alert => alert.type === type);
+                
+                if (existingIndex !== -1) {
+                    // Mettre à jour l'alerte existante
+                    alertItems[existingIndex].frequency = parseInt(frequency);
+                    alertItems[existingIndex].reminder = parseInt(reminder);
+                } else {
+                    // Ajouter une nouvelle alerte
+                    const newAlert = {
+                        id: alertItems.length > 0 ? Math.max(...alertItems.map(item => item.id)) + 1 : 1,
+                        type,
+                        frequency: parseInt(frequency),
+                        reminder: parseInt(reminder)
+                    };
+                    
+                    alertItems.push(newAlert);
+                }
+                
+                updateAlertsList();
+                showNotification('Alerte enregistrée avec succès');
+            });
+        });
+        
+        // Fonctions utilitaires
+        function updateMaintenanceList() {
+            const container = document.getElementById('maintenance-list');
+            const emptyState = document.getElementById('empty-maintenance');
+            
+            if (maintenanceItems.length === 0) {
+                container.innerHTML = '';
+                emptyState.style.display = 'block';
+                return;
+            }
+            
+            emptyState.style.display = 'none';
+            
+            // Trier par date (les plus urgents en premier)
+            const sortedItems = [...maintenanceItems].sort((a, b) => new Date(a.nextDate) - new Date(b.nextDate));
+            
+            container.innerHTML = sortedItems.map(item => `
+                <div class="maintenance-item">
+                    <div class="item-info">
+                        <h3>${item.name}</h3>
+                        <p>Dernier: ${formatDate(item.lastDate)} • Prochain: ${formatDate(item.nextDate)}</p>
+                    </div>
+                    <div class="item-actions">
+                        <div class="status ${item.status}">${getStatusText(item.status)}</div>
+                        <button class="btn btn-danger btn-small" onclick="deleteMaintenanceItem(${item.id})">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+        
+        function updateHistoryList() {
+            const container = document.getElementById('history-list');
+            const emptyState = document.getElementById('empty-history');
+            
+            if (historyItems.length === 0) {
+                container.innerHTML = '';
+                emptyState.style.display = 'block';
+                return;
+            }
+            
+            emptyState.style.display = 'none';
+            
+            // Trier par date (les plus récents en premier)
+            const sortedItems = [...historyItems].sort((a, b) => new Date(b.date) - new Date(a.date));
+            
+            container.innerHTML = sortedItems.map(item => `
+                <div class="history-item">
+                    <div>
+                        <div class="history-date">${formatDate(item.date)}</div>
+                        <div class="history-desc">${item.description}</div>
+                    </div>
+                    <div class="history-actions">
+                        <button class="btn btn-danger btn-small" onclick="deleteHistoryItem(${item.id})">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+        
+        function updateAlertsList() {
+            const container = document.getElementById('alerts-list');
+            const emptyState = document.getElementById('empty-alerts');
+            
+            if (alertItems.length === 0) {
+                container.innerHTML = '';
+                emptyState.style.display = 'block';
+                return;
+            }
+            
+            emptyState.style.display = 'none';
+            
+            container.innerHTML = alertItems.map(alert => `
+                <div class="maintenance-item">
+                    <div class="item-info">
+                        <h3>${getCategoryName(alert.type)}</h3>
+                        <p>Fréquence: ${alert.frequency} mois • Rappel: ${alert.reminder} jours avant</p>
+                    </div>
+                    <div class="history-actions">
+                        <button class="btn btn-danger btn-small" onclick="deleteAlert(${alert.id})">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+        
+        function updateStats() {
+            const urgentCount = maintenanceItems.filter(item => item.status === 'urgent').length;
+            const dueCount = maintenanceItems.filter(item => item.status === 'due').length;
+            const totalCount = maintenanceItems.length;
+            
+            document.getElementById('urgentCount').textContent = urgentCount;
+            document.getElementById('dueCount').textContent = dueCount;
+            document.getElementById('totalCount').textContent = totalCount;
+        }
+        
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            return date.toLocaleDateString('fr-FR');
+        }
+        
+        function getStatusText(status) {
+            switch(status) {
+                case 'urgent': return 'Urgent';
+                case 'due': return 'Bientôt';
+                case 'ok': return 'OK';
+                default: return 'Inconnu';
+            }
+        }
+        
+        function getCategoryName(category) {
+            const categories = {
+                'chaudiere': 'Chaudière',
+                'filtres': 'Filtres à eau',
+                'fumee': 'Détecteurs de fumée',
+                'vmc': 'VMC',
+                'climatisation': 'Climatisation',
+                'ballon': 'Ballon d\'eau chaude',
+                'forage': 'Ballon de forage',
+                'ramonage': 'Ramonage',
+                'controle_technique': 'Contrôle technique',
+                'revision_vehicule': 'Révision véhicule',
+                'autre': 'Autre'
+            };
+            
+            return categories[category] || 'Inconnu';
+        }
+        
+        function showNotification(message, type = 'success') {
+            const notification = document.getElementById('notification');
+            notification.textContent = message;
+            
+            if (type === 'error') {
+                notification.style.backgroundColor = 'var(--danger)';
+            } else {
+                notification.style.backgroundColor = 'var(--primary)';
+            }
+            
+            notification.style.display = 'block';
+            
+            setTimeout(() => {
+                notification.style.display = 'none';
+            }, 3000);
+        }
+        
+        function deleteMaintenanceItem(id) {
+            if (confirm('Êtes-vous sûr de vouloir supprimer cet entretien ?')) {
+                maintenanceItems = maintenanceItems.filter(item => item.id !== id);
+                updateMaintenanceList();
+                updateStats();
+                showNotification('Entretien supprimé');
+            }
+        }
+        
+        function deleteHistoryItem(id) {
+            historyItems = historyItems.filter(item => item.id !== id);
+            updateHistoryList();
+            showNotification('Élément supprimé de l\'historique');
+        }
+        
+        function deleteAlert(id) {
+            alertItems = alertItems.filter(item => item.id !== id);
+            updateAlertsList();
+            showNotification('Alerte supprimée');
+        }
+    </script>
+</body>
+</html>
